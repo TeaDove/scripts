@@ -1,0 +1,2 @@
+aerich==0.5.3
+tortoise-orm>=0.17.2

@@ -1,0 +1,72 @@
+###############################################################################
+## Monit control file
+###############################################################################
+##
+## Comments begin with a '#' and extend through the end of the line. Keywords
+## are case insensitive. All path's MUST BE FULLY QUALIFIED, starting with '/'.
+##
+## Below you will find examples of some frequently used statements. For
+## information about the control file and a complete list of statements and
+## options, please have a look in the Monit manual.
+##
+##
+###############################################################################
+## Global section
+###############################################################################
+##
+## Start Monit in the background (run as a daemon):
+#
+
+set daemon 120            # check services at 2-minute intervals
+
+set log /var/log/monit.log
+set idfile /var/lib/monit/id
+set statefile /var/lib/monit/state
+set eventqueue
+  basedir /var/lib/monit/events # set the base directory where events will be stored
+  slots 100                     # optionally limit the queue size
+
+###############################################################################
+## Services
+###############################################################################
+##
+## Check general system resources such as load average, cpu and memory
+## usage. Each test specifies a resource, conditions and the action to be
+## performed should a test fail.
+#
+
+check system $HOST
+  if loadavg (1min) per core > 2 for 5 cycles then exec "/etc/monit/monit_alert.py"
+  if loadavg (5min) per core > 1.5 for 10 cycles then exec "/etc/monit/monit_alert.py"
+  if cpu usage > 80% for 5 times within 10 cycles then exec "/etc/monit/monit_alert.py"
+  if cpu usage > 95% for 3 times within 5 cycles then exec "/etc/monit/monit_alert.py"
+  if memory usage > 80% for 3 times within 5 cycles then exec "/etc/monit/monit_alert.py"
+  if swap usage > 25% for 3 times within 5 cycles then exec "/etc/monit/monit_alert.py"
+
+
+###############################################################################
+## Includes
+###############################################################################
+
+include /etc/monit/conf.d/**.conf
+include /etc/monit/conf-enabled/**.conf
+
+###############################################################################
+## Web interface
+###############################################################################
+
+set httpd port 2812
+    use address localhost
+    # i.g. use address tesseract.club
+    # Подключение SSL
+    #ssl enable
+    #pemfile /etc/monit/pemfile-tesseract.club.pem
+    # allowed ips
+    allow 127.0.0.1
+    #allow 116.203.245.151
+    #allow 10.99.97.1/24
+    #allow 0.0.0.0/0.0.0.0 # Все айпи адресса
+    # login and password
+    # create htpasswd with "htpasswd -n <username>"
+    allow admin:monit
+    allow md5 /etc/monit/htpasswd
