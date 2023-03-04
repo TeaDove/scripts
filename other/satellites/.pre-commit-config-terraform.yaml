@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.72.1
+    hooks:
+      - id: terragrunt_fmt  # formates terragrunt
+      - id: terraform_fmt  # formates terraform

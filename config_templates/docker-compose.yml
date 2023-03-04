@@ -1,5 +1,5 @@
 # Пример правильно сформулированного docker-compose.yml
-version: "3.9"  # optional since v1.27.0
+version: "3.9" # optional since v1.27.0
 services:
   flask:
     build: ./flask-app/
@@ -13,28 +13,28 @@ services:
       - open
     #Ограничение ресурсов
     deploy:
-        resources:
-            limits:
-                cpus: 0.50
-                memory: 128M
-            reservations:
-                memory: 64M
+      resources:
+        limits:
+          cpus: 0.50
+          memory: 128M
+        reservations:
+          memory: 64M
   redis:
     image: redis:latest
     ports:
-        - 6379:6379
+      - 6379:6379
     networks:
-        - isolated
+      - isolated
     volumes:
-        - ./redis-app/config/redis.conf:/redis.conf
+      - ./redis-app/config/redis.conf:/redis.conf
     command: [ "redis-server", "/redis.conf" ]
     deploy:
-        resources:
-            limits:
-                cpus: 0.50
-                memory: 128M
-            reservations:
-                memory: 64M
+      resources:
+        limits:
+          cpus: 0.50
+          memory: 128M
+        reservations:
+          memory: 64M
 
 networks:
   # isolated не имеет выход в интернет, только внутри себя, open имеет
