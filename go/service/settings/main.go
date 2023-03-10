@@ -1,8 +1,6 @@
-package Shared
+package settings
 
 import (
-	"fmt"
-
 	"github.com/caarlos0/env/v6"
 	"github.com/joho/godotenv"
 )
@@ -12,15 +10,11 @@ type Settings struct {
 }
 
 func NewSettings() Settings {
-	err := godotenv.Load(".env")
-	if err != nil {
-		_ = 0
-		// fmt.Println("Error loading .env file, ignoring it")
-	}
+	_ = godotenv.Load(".env")
 
 	settings := Settings{}
 	if err := env.Parse(&settings); err != nil {
-		fmt.Printf("%+v\n", err)
+		panic(err)
 	}
 
 	return settings

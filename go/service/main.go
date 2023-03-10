@@ -1,11 +1,10 @@
 package main
 
 import (
-	"service/Service"
+	"service/container"
 )
 
 func main() {
-	// _ := Shared.NewSettings()
-	appService := Service.AppService{}
-	appService.ProcessEvent()
+	container := container.NewCombatContainer()
+	container.AppService.ProcessEvent()
 }
