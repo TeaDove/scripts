@@ -4,18 +4,18 @@ import (
 	"fmt"
 )
 
-type employee struct {
+type Employee struct {
 	FirstName   string
 	LastName    string
 	TotalLeaves int
 	LeavesTaken int
 }
 
-func New(firstName string, lastName string, totalLeave int, leavesTaken int) employee {
-	e := employee{firstName, lastName, totalLeave, leavesTaken}
+func New(firstName string, lastName string, totalLeave int, leavesTaken int) Employee {
+	e := Employee{firstName, lastName, totalLeave, leavesTaken}
 	return e
 }
 
-func (e employee) LeavesRemaining() {
+func (e Employee) LeavesRemaining() {
 	fmt.Printf("%s %s has %d leaves remaining\n", e.FirstName, e.LastName, (e.TotalLeaves - e.LeavesTaken))
 }

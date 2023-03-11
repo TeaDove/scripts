@@ -1,4 +1,4 @@
-package app_service
+package service
 
 import (
 	"fmt"

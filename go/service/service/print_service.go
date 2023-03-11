@@ -1,4 +1,4 @@
-package print_service
+package service
 
 import (
 	"fmt"

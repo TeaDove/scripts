@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	container := container.NewCombatContainer()
-	container.AppService.ProcessEvent()
+	combatContainer := container.NewCombatContainer()
+	combatContainer.AppService.ProcessEvent()
 }
