@@ -17,14 +17,14 @@ target-version = ['py39']
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-markers = ["unit"]
+markers = ["unit", "integration"]
 
 [tool.flake8]
 ignore = [
     "D203", "E203", "W503", "SCS108",
     "R502", "R501", "R504", "R503", "PIE781",
     "PIE786", "PIE798", "PIE803", "PIE785",
-    "PIE797", "S105", "ECE001"
+    "PIE797", "S105", "ECE001", "ANN101", "ANN102", "ANN002", "ANN003"
     ]
 exclude = [
     "**/__pycache__",
@@ -44,6 +44,30 @@ extend-immutable-calls = [
 ]
 
 kwargs-max-positional-arguments = 4
-kwargs-ignore-function-pattern-extend = '(select)|(where)|(and_)|(or_)|(ST_\w*)'
+kwargs-ignore-function-pattern-extend = '(select)|(where)|(and_)|(or_)|(ST_\w*)|(json_build_object)|(group_by)|(execute_command)'
 
 noqa-require-code = true
+
+suppress-dummy-args = true
+
+[tool.mypy]
+namespace_packages=true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+no_implicit_reexport = true
+no_warn_no_return = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_ignores = true
+
+# Output configuration
+show_error_context = true
+show_column_numbers = true
+show_error_codes = true
+pretty = true
