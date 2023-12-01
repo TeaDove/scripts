@@ -11,4 +11,6 @@ cd dotfiles
 ./dotfiles_setup.py -f
 cd ~
 
+git config --global credential.helper store
+
 chsh -s $(which zsh)
