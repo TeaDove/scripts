@@ -22,7 +22,6 @@ from selectivity_test
 where birthday_year = 2000
 limit 10;
 -- Seq Scan
--- Planning Time: 0.045 ms
 -- Execution Time: 0.144 ms
 
 
@@ -35,7 +34,6 @@ from selectivity_test
 where birthday_year = 2000
 limit 10;
 -- Index Scan
--- Planning Time: 0.138 ms
 -- Execution Time: 0.096 ms
 
 
@@ -45,7 +43,6 @@ from selectivity_test
 where gender = 'female'
 limit 10;
 -- Seq Scan
--- Planning Time: 0.051 ms
 -- Execution Time: 0.027 ms
 
 drop index if exists selectivity_test_gender;
@@ -57,7 +54,6 @@ from selectivity_test
 where gender = 'female'
 limit 10;
 -- Seq Scan
--- Planning Time: 0.127 ms
 -- Execution Time: 0.023 ms
 
 
@@ -67,7 +63,6 @@ from selectivity_test
 where level = 1
 limit 10;
 -- Seq Scan
--- Planning Time: 0.050 ms
 -- Execution Time: 0.030 ms
 
 drop index if exists selectivity_test_level;
@@ -79,5 +74,28 @@ from selectivity_test
 where level = 1
 limit 10;
 -- Index Scan
--- Planning Time: 0.061 ms
 -- Execution Time: 0.061 ms
+
+
+drop index if exists selectivity_test_level;
+drop index if exists selectivity_test_gender;
+drop index if exists selectivity_test_birthday_year;
+
+explain analyse
+select *
+from selectivity_test
+where level = 1 and birthday_year = 2000
+limit 10;
+-- Seq Scan
+-- Execution Time: 0.795 ms
+
+drop index if exists selectivity_test_level_birthday_year;
+create index selectivity_test_level_birthday_year on selectivity_test (level, birthday_year);
+
+explain analyse
+select *
+from selectivity_test
+where level = 1 and birthday_year = 2000
+limit 10;
+-- Index Scan
+-- Execution Time: 0.095 ms
