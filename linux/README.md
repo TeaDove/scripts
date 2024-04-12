@@ -25,17 +25,23 @@ root     26335  0.0  0.0   6144   888 pts/0    S+   20:18   0:00 grep --color=au
 ssh -R <откуда-адресс>:<откуда-порт>:<куда-адресс>:<куда-порт> -N <юзер сервера>@<адресс сервера>
 ```
 Запускать на машине Х
-Будет проксировать запросы с машины У, к которой подключаются через `<юзер сервера>@<адресс сервера>`
-
 Будет проксировать запросы из машины У `<откуда-адресс>:<откуда-порт>` в машину Х `<куда-адресс>:<куда-порт>`
+
 Не забыть вставить в /etc/ssh/sshd_config
 ```shell
 AllowTcpForwarding yes
 GatewayPorts yes
 X11Forwarding yes
+ClientAliveInterval 15
+ClientAliveCountMax 4
 ```
 И выполнить
 `systemctl restart sshd`
+На клиенте в `/etc/ssh/ssh_config`
+```shell
+ClientAliveInterval 15
+ClientAliveCountMax 4
+```
 
 Или экспозинг через нат:
 `ssh ssh-j.com`
