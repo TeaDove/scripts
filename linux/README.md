@@ -48,9 +48,29 @@ ClientAliveCountMax 4
 
 #### Например
 ``` bash
-ssh -f -N root@116.203.245.151 -L tesseract.club:8002:tesseract.club:8000
+ssh -R root@116.203.245.151 -N 0.0.0.0:8000:localhost:8000
 ```
-Будет форвардить с tesseract.club:8002 на tesseract.club:8000, настройка производилась для сервера 116.203.245.151 с юзером root. Для удаления, найдите процесс через ps aux и убейте.
+Будет форвардить все запросы в машину (root@116.203.245.151) в клиенскую машину с порта 8000
+
+
+#### Systemd
+```shell
+vim /etc/systemd/system/amazing.service
+
+# >
+[Unit]
+Description=amazing
+
+[Service]
+ExecStart=echo "nice"
+
+[Install]
+WantedBy=multi-user.target
+
+systemctl daemon-reload
+systemctl restart amazing
+systemctl status amazing
+```
 
 #### UDP
 ``` bash
