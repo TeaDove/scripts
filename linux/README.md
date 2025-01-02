@@ -141,7 +141,7 @@ docker system df -v
 sudo nmap -sn 192.168.1.0/24
 ```
 
-### Scan for used open ports of this machine
+### Scan for open ports of this machine
 
 ```bash
 netstat -tulpn # linux
@@ -149,7 +149,7 @@ netstat -tulpn # linux
 lsof -PiTCP -sTCP:LISTEN # darwin
 ```
 
-### Scan for used open ports by ip-address
+### Scan for open ports by ip-address
 
 ```bash
 sudo nmap -n -PN -sT -sU -p- localhost
