@@ -3,13 +3,13 @@ services:
     build: ./proxy
     restart: always
     ports:
+      # - 8081:8081
       - 8081:8081
-      # - 8082:443
     environment:
-      - HTTP_PORT=8081
-      - HTTPS_PORT=8082
+      # - HTTP_PORT=8081
+      - HTTPS_PORT=8081
     volumes:
-      # - ./certs:/etc/nginx/certs:ro,z
+      - ./certs:/etc/nginx/certs:ro,z
       - ./data/vhost.d:/etc/nginx/vhost.d:z
       - ./data/html:/usr/share/nginx/html:z
       - /var/run/docker.sock:/tmp/docker.sock:z,ro
