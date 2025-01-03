@@ -3,17 +3,16 @@ services:
     build: ./proxy
     restart: always
     ports:
-      - 8081:80
+      - 8081:8081
       # - 8082:443
+    environment:
+      - HTTP_PORT=8081
+      - HTTPS_PORT=8082
     volumes:
       # - ./certs:/etc/nginx/certs:ro,z
       - ./data/vhost.d:/etc/nginx/vhost.d:z
       - ./data/html:/usr/share/nginx/html:z
       - /var/run/docker.sock:/tmp/docker.sock:z,ro
-    labels:
-      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
-    networks:
-      - proxy-tier
 
   db:
     image: postgres:alpine
@@ -35,20 +34,15 @@ services:
     volumes:
       - ./data/nextcloud:/var/www/html
     environment:
-      - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/nextcloud_admin_password
-      - NEXTCLOUD_ADMIN_USER_FILE=/run/secrets/nextcloud_admin_user
       - POSTGRES_HOST=db
       - POSTGRES_PASSWORD=nextcloud
       - REDIS_HOST=redis
-    secrets:
-      - nextcloud_admin_password
-      - nextcloud_admin_user
+    env_file:
+      - ./app.env
     depends_on:
       - db
       - redis
-    networks:
-      - proxy-tier
-      - default
+      - proxy
 
   cron:
     image: nextcloud:apache
@@ -59,12 +53,3 @@ services:
     depends_on:
       - db
       - redis
-
-secrets:
-  nextcloud_admin_password:
-    file: ./nextcloud_admin_password.txt # put admin password in this file
-  nextcloud_admin_user:
-    file: ./nextcloud_admin_user.txt # put admin username in this file
-
-networks:
-  proxy-tier:
