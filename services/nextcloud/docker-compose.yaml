@@ -15,7 +15,7 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:z,ro
 
   db:
-    image: postgres:alpine
+    image: postgres:17.2
     restart: always
     volumes:
       - ./data/db:/var/lib/postgresql/data:Z
@@ -25,11 +25,11 @@ services:
       - POSTGRES_USER=nextcloud
 
   redis:
-    image: redis:alpine
+    image: redis:7.4.1
     restart: always
 
   app:
-    image: nextcloud:apache
+    image: nextcloud:30.0.4-apache
     restart: always
     volumes:
       - ./data/nextcloud:/var/www/html
@@ -45,7 +45,7 @@ services:
       - proxy
 
   cron:
-    image: nextcloud:apache
+    image: nextcloud:30.0.4-apache
     restart: always
     volumes:
       - ./data/nextcloud:/var/www/html:z
