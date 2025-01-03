@@ -8,6 +8,7 @@ services:
     environment:
       # - HTTP_PORT=8081
       - HTTPS_PORT=8081
+      - TRUST_DOWNSTREAM_PROXY=false
     volumes:
       - ./certs:/etc/nginx/certs:ro,z
       - ./data/vhost.d:/etc/nginx/vhost.d:z
