@@ -1,3 +1,6 @@
+services/nextcloud/data/
+services/nextcloud/certs/
+services/nextcloud/app.env
 **/bootstrap
 
 ### SAM BUILD ###
