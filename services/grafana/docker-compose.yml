@@ -17,8 +17,6 @@ services:
     restart: unless-stopped
     labels:
       org.label-schema.group: "monitoring"
-    networks:
-      - monitor-net
 
   influxdb:
     image: influxdb:1.11
@@ -34,8 +32,6 @@ services:
       - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf
     labels:
       org.label-schema.group: "monitoring"
-    networks:
-      - monitor-net
 
   nodeexporter:
     image: prom/node-exporter:v1.9.1
@@ -53,8 +49,6 @@ services:
     restart: unless-stopped
     labels:
       org.label-schema.group: "monitoring"
-    networks:
-      - monitor-net
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.52.1
@@ -70,12 +64,8 @@ services:
       - /var/lib/docker:/var/lib/docker:ro
       #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
     restart: unless-stopped
-    ports:
-      - 8080:8080
     labels:
       org.label-schema.group: "monitoring"
-    networks:
-      - monitor-net
 
   grafana:
     image: grafana/grafana:12.0.0
@@ -94,9 +84,3 @@ services:
       - 3000:3000
     labels:
       org.label-schema.group: "monitoring"
-    networks:
-      - monitor-net
-
-networks:
-  monitor-net:
-    driver: bridge
