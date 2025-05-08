@@ -2,7 +2,8 @@ services:
   reverse-proxy:
     image: traefik:v3.4
     command:
-      - "--api.insecure=true"
+      - "--log.level=DEBUG"
+      # - "--api.insecure=true"
       - "--providers.docker"
       - "--providers.docker.exposedbydefault=false"
       - "--entryPoints.web.address=:80"
