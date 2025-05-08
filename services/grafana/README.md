@@ -1,0 +1,1 @@
+Copy-pasted from https://github.com/t0mer/grafana-stack
