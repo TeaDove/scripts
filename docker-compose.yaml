@@ -15,8 +15,9 @@ services:
       POSTGRES_PASSWORD: "main"
       POSTGRES_DB: "main"
     volumes:
-      - .data/postgres:/var/lib/postgresql/data
+      - .data/postgres:/var/lib/postgresql
 #      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
 
 #  kafka:
 #    image: confluentinc/cp-kafka:7.6.1

@@ -1,4 +1,6 @@
-.data
+**/.data/*
+!**/.data/.gitkeep
+
 services/nextcloud/data/
 services/nextcloud/certs/
 services/nextcloud/app.env
