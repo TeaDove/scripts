@@ -48,8 +48,8 @@ func run(ctx context.Context, username, password string) error {
 
 		dst := filepath.Join(dstDir, info.Name())
 
-		_, err = client.Stat(ctx, dst)
-		if err == nil {
+		stat, err := client.Stat(ctx, dst)
+		if err == nil && stat.Size != 0 {
 			logger.Info().Msg("already.exists")
 			return nil
 		}
