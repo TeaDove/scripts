@@ -1,31 +1,16 @@
 services:
-  proxy:
-    build: ./proxy
+  caddy:
+    image: caddy:2.8-alpine
     restart: always
     ports:
-      - 80:80
-      - 443:443
-    environment:
-      - TRUST_DOWNSTREAM_PROXY=false
+      - "80:80"
+      - "443:443"
     volumes:
-      - ./certs:/etc/nginx/certs:ro,z
-      - ./data/vhost.d:/etc/nginx/vhost.d:z
-      - ./data/html:/usr/share/nginx/html:z
-      - /var/run/docker.sock:/tmp/docker.sock:z,ro
-
-  db:
-    image: postgres:17.2
-    restart: always
-    volumes:
-      - ./data/db:/var/lib/postgresql/data:Z
-    environment:
-      - POSTGRES_PASSWORD=nextcloud
-      - POSTGRES_DB=nextcloud
-      - POSTGRES_USER=nextcloud
-
-  redis:
-    image: redis:7.4.1
-    restart: always
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./data/caddy:/data
+      - ./data/caddy-config:/config
+    depends_on:
+      - app
 
   app:
     image: nextcloud:30.0.4-apache
@@ -52,3 +37,17 @@ services:
     depends_on:
       - db
       - redis
+
+  db:
+    image: postgres:17.2
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data:Z
+    environment:
+      - POSTGRES_PASSWORD=nextcloud
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+
+  redis:
+    image: redis:7.4.1
+    restart: always

@@ -1,0 +1,14 @@
+pi.lan { # Set domain
+  tls internal
+
+  reverse_proxy app:80 {
+    header_up Host {host}
+    header_up X-Real-IP {remote_host}
+    header_up X-Forwarded-For {remote_host}
+    header_up X-Forwarded-Proto https
+  }
+
+  request_body {
+    max_size 10GB
+  }
+}
