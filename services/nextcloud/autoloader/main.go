@@ -34,11 +34,7 @@ func run(ctx context.Context, username, password string) error {
 	}
 
 	err = filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
-		if info.IsDir() {
-			return nil
-		}
-
-		if info.Size() == 0 {
+		if info == nil || info.IsDir() || info.Size() == 0 {
 			return nil
 		}
 
