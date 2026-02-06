@@ -1,106 +1,63 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"io/fs"
+	"autoloader/davsupplier"
+	"autoloader/loaderservice"
+	"autoloader/settings"
 	"net/http"
-	"os"
-	"path/filepath"
+	"time"
 
+	"github.com/barasher/go-exiftool"
 	"github.com/cockroachdb/errors"
-	"github.com/emersion/go-webdav"
 	"github.com/rs/zerolog"
 	"github.com/teadove/teasutils/service_utils/logger_utils"
 )
 
-const (
-	path   = "https://pi.lan/remote.php/dav/files/%s/"
-	dstDir = "autoloader"
-)
-
-func run(ctx context.Context, username, password string) error {
-	client, err := webdav.NewClient(webdav.HTTPClientWithBasicAuth(&http.Client{}, username, password), fmt.Sprintf(path, username))
+func build() (*loaderservice.Service, error) {
+	davSupplier, err := davsupplier.NewSupplier(
+		http.DefaultClient,
+		settings.Settings.DAVHostname,
+		settings.Settings.DAVUsername,
+		settings.Settings.DAVPassword,
+		settings.Settings.DSTDir,
+	)
 	if err != nil {
-		return errors.Wrap(err, "creating webdav client")
+		return nil, errors.Wrap(err, "davsupplier new supplier")
 	}
 
-	_, err = client.Stat(context.Background(), dstDir)
+	et, err := exiftool.NewExiftool()
 	if err != nil {
-		err = client.Mkdir(ctx, dstDir)
-		if err != nil {
-			return errors.Wrap(err, "creating directory")
-		}
+		return nil, errors.Wrap(err, "new exiftool")
 	}
 
-	err = filepath.Walk(".", func(path string, info fs.FileInfo, err error) error {
-		if info == nil || info.IsDir() || info.Size() == 0 {
-			return nil
-		}
+	loaderService := loaderservice.NewService(
+		davSupplier,
+		et,
+		settings.Settings.MountPath,
+		settings.Settings.TMPDir,
+		settings.Settings.FoldersToLoad,
+	)
 
-		logger := zerolog.Ctx(ctx).With().Str("path", path).Logger()
-
-		logger.Info().Msg("uploading.file")
-
-		dst := filepath.Join(dstDir, info.Name())
-
-		stat, err := client.Stat(ctx, dst)
-		if err == nil && stat.Size != 0 {
-			logger.Info().Msg("already.exists")
-			return nil
-		}
-
-		writer, err := client.Create(ctx, dst)
-		if err != nil {
-			return errors.Wrap(err, "creating file")
-		}
-
-		file, err := os.Open(path)
-		if err != nil {
-			return errors.Wrap(err, "opening file")
-		}
-
-		_, err = file.WriteTo(writer)
-		if err != nil {
-			return errors.Wrap(err, "copying file")
-		}
-
-		err = writer.Close()
-		if err != nil {
-			return errors.Wrap(err, "closing file")
-		}
-
-		logger.Info().Msg("uploaded")
-
-		return nil
-	})
-	if err != nil {
-		return errors.Wrap(err, "walking directory")
-	}
-
-	return nil
+	return loaderService, nil
 }
 
 func main() {
-	fmt.Printf("Enter username: ")
-	var (
-		username string
-		password string
-	)
-
-	_, err := fmt.Scanln(&username)
+	loaderService, err := build()
 	if err != nil {
-		fmt.Printf("%s\n", errors.Wrap(err, "failed to read username"))
+		panic(errors.Wrap(err, "build loaderservice"))
 	}
 
-	fmt.Printf("Enter password: ")
-	_, err = fmt.Scanln(&password)
-	if err != nil {
-		fmt.Printf("%s\n", errors.Wrap(err, "failed to read password"))
-	}
+	for {
+		ctx := logger_utils.NewLoggedCtx()
 
-	err = run(logger_utils.NewLoggedCtx(), username, password)
-	if err != nil {
-		fmt.Printf("%s\n", errors.Wrap(err, "failed to run autoloader"))
+		err = loaderService.Run(ctx)
+		if err != nil {
+			zerolog.Ctx(ctx).Error().
+				Stack().Err(err).
+				Msg("failed.to.run.loader")
+			time.Sleep(time.Minute)
+		}
+
+		time.Sleep(time.Minute)
 	}
 }

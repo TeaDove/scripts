@@ -26,7 +26,6 @@ services:
     depends_on:
       - db
       - redis
-      - proxy
 
   cron:
     image: nextcloud:30.0.4-apache
@@ -37,6 +36,20 @@ services:
     depends_on:
       - db
       - redis
+
+  autoloader:
+    build:
+      context: autoloader
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - /media/teadove:/media/teadove:r
+    environment:
+      - AUTOLOADER_DAV_HOSTNAME="http://app:80"
+    env_file:
+      - ./autoloader.env
+    depends_on:
+      - app
 
   db:
     image: postgres:17.2
