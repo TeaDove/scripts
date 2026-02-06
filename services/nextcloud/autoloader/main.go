@@ -55,7 +55,6 @@ func main() {
 			zerolog.Ctx(ctx).Error().
 				Stack().Err(err).
 				Msg("failed.to.run.loader")
-			time.Sleep(time.Minute)
 		}
 
 		time.Sleep(time.Minute)
