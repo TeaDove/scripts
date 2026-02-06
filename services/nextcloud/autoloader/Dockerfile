@@ -13,8 +13,15 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
     --mount=type=cache,target=/go/pkg/mod \
     go build -trimpath -o=bootstrap -v main.go
 
-FROM gcr.io/distroless/base-debian13:latest
+FROM debian:12.13-slim
 
-COPY --from=build /src/bootstrap /
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      libimage-exiftool-perl \
+      tzdata \
+      ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /bootstrap /bootstrap
 
 CMD ["/bootstrap"]

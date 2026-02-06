@@ -45,7 +45,7 @@ services:
     volumes:
       - /media/teadove:/media/teadove:r
     environment:
-      - AUTOLOADER_DAV_HOSTNAME="http://app:80"
+      - AUTOLOADER_DAV_HOSTNAME=http://app:80
     env_file:
       - ./autoloader.env
     depends_on:
