@@ -11,7 +11,8 @@ services:
       - "8082:443/tcp"
     environment:
       TZ: 'Asia/Tbilisi'
-      FTLCONF_webserver_api_password: 'correct horse battery staple'
+    env_file:
+      - pihole.env
     volumes:
       - './.data/etc-pihole:/etc/pihole'
     cap_add:
