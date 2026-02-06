@@ -22,6 +22,6 @@ RUN apt-get update && \
       ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /bootstrap /bootstrap
+COPY --from=build /src/bootstrap /bootstrap
 
 CMD ["/bootstrap"]
