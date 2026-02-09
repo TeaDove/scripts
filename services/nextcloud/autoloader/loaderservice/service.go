@@ -43,6 +43,14 @@ func (r *Service) Run(ctx context.Context) error {
 		return errors.Wrap(err, "read mount dir")
 	}
 
+	var names []string
+	for _, entry := range mountDir {
+		names = append(names, entry.Name())
+	}
+	zerolog.Ctx(ctx).Debug().
+		Strs("folders_to_check", names).
+		Msg("checking.folders")
+
 	for _, entry := range mountDir {
 		if !entry.IsDir() {
 			continue

@@ -57,6 +57,7 @@ func main() {
 				Msg("failed.to.run.loader")
 		}
 
+		zerolog.Ctx(ctx).Debug().Msg("iteration.done")
 		time.Sleep(time.Minute)
 	}
 }
