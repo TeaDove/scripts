@@ -56,6 +56,8 @@ func (r *Service) Run(ctx context.Context) error {
 			return errors.Wrap(err, "read camera dir")
 		}
 
+		logger.Debug().Interface("dirs", cameraDir).Msg("checking.camera")
+
 		for _, cameraEntry := range cameraDir {
 			logger.Debug().Str("entry", cameraEntry.Name()).Msg("checking.camera.dir")
 			if !slices.Contains(r.foldersToLoad, cameraEntry.Name()) {
