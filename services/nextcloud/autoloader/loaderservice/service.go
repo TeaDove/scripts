@@ -16,7 +16,6 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
 	"github.com/teadove/teasutils/service_utils/logger_utils"
-	"github.com/teadove/teasutils/utils/test_utils"
 )
 
 type Service struct {
@@ -53,8 +52,6 @@ func (r *Service) Run(ctx context.Context) error {
 		if err != nil {
 			return errors.Wrap(err, "read camera dir")
 		}
-
-		test_utils.Pprint(cameraDir, entry.Name())
 
 		for _, cameraEntry := range cameraDir {
 			if !slices.Contains(r.foldersToLoad, cameraEntry.Name()) {
