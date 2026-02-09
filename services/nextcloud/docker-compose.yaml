@@ -43,7 +43,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     volumes:
-      - /media/teadove:/media/teadove:r
+      - /media/teadove:/media/teadove:ro,rshared
     environment:
       - AUTOLOADER_DAV_HOSTNAME=http://app:80
     env_file:
