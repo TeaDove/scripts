@@ -118,10 +118,16 @@ func (r *Service) uploadFolder(ctx context.Context, cameraID string, photosFolde
 		return errors.Wrap(err, "set last file hash")
 	}
 
-	zerolog.Ctx(ctx).
-		Info().
-		Int("count", count).
-		Msg("files.uploaded")
+	if count == 0 {
+		zerolog.Ctx(ctx).
+			Info().
+			Msg("no.files.changed")
+	} else {
+		zerolog.Ctx(ctx).
+			Info().
+			Int("count", count).
+			Msg("files.uploaded")
+	}
 
 	return nil
 }
