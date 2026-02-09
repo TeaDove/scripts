@@ -16,6 +16,7 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/rs/zerolog"
 	"github.com/teadove/teasutils/service_utils/logger_utils"
+	"github.com/teadove/teasutils/utils/test_utils"
 )
 
 type Service struct {
@@ -44,10 +45,7 @@ func (r *Service) Run(ctx context.Context) error {
 	}
 
 	for _, entry := range mountDir {
-		logger := zerolog.Ctx(ctx).With().Str("folders", entry.Name()).Logger()
-		logger.Debug().Msg("checking.folder")
 		if !entry.IsDir() {
-			logger.Debug().Msg("not.dir")
 			continue
 		}
 
@@ -56,12 +54,10 @@ func (r *Service) Run(ctx context.Context) error {
 			return errors.Wrap(err, "read camera dir")
 		}
 
-		logger.Debug().Interface("dirs", cameraDir).Msg("checking.camera")
+		test_utils.Pprint(cameraDir, entry.Name())
 
 		for _, cameraEntry := range cameraDir {
-			logger.Debug().Str("entry", cameraEntry.Name()).Msg("checking.camera.dir")
 			if !slices.Contains(r.foldersToLoad, cameraEntry.Name()) {
-				logger.Debug().Str("entry", cameraEntry.Name()).Msg("wrong.name")
 				continue
 			}
 
